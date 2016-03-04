@@ -1,0 +1,120 @@
+/*RESET*/
+html,body,h1,h2,h3,h4,h5,h6,div,dl,dt,dd,ul,ol,li,p,blockquote,pre,hr,figure,table,caption,th,td,form,fieldset,legend,input,button,textarea,menu{margin:0;padding:0;}
+header,footer,section,article,aside,nav,hgroup,address,figure,figcaption,menu,details{display:block;}
+table{border-collapse:collapse;border-spacing:0;}
+caption,th{text-align:left;font-weight:normal;}
+html,body,fieldset,img,iframe,abbr{border:0;}
+i,cite,em,var,address,dfn{font-style:normal;}
+[hidefocus],summary{outline:0;}
+li{list-style:none;}
+h1,h2,h3,h4,h5,h6,small{font-size:100%;}
+sup,sub{font-size:83%;}
+pre,code,kbd,samp{font-family:inherit;}
+q:before,q:after{content:none;}
+textarea{overflow:auto;resize:none;}
+label,summary{cursor:default;}
+a,button{cursor:pointer;}
+h1,h2,h3,h4,h5,h6,em,strong,b{font-weight:normal;}
+del,ins,u,s,a,a:hover{text-decoration:none;}
+body,textarea,input,button,select,keygen,legend{font:12px/1.14 arial,simsun;color:#333;outline:0;}
+body{background:#fff;}
+a,a:hover{color:#333;}
+
+
+.m-hd{
+	width: 1205px;
+	height: 90px;
+	margin: 0 auto;
+}
+
+.hd-logo{
+	height: 90px;
+}
+
+.hd-logo img{
+	display: inline-block;
+	padding: 34px 0;
+}
+
+.hd-login{
+	height: 90px;
+}
+
+.hd-attention{
+	display: inline-block;
+	width: 54px;
+	height: 21px;
+	margin:34px 13px 34px 31px;
+	padding-left: 15px;
+	border:none;
+	border-radius: 2px;
+	background: #21a557 url('../img/+.png') no-repeat 20% 50%;
+	color: #fff;
+	font:normal 12px/21px 'simsun';
+	cursor:pointer;
+}
+
+
+.hd-fan{
+	display: inline-block;
+	color:#666;
+	font:normal 12px/21px 'simsun';
+}
+
+.hd-nav{
+	height: 90px;
+	font:normal 16px/90px 'Microsoft Yahei';
+} 
+
+.hd-nav a{
+	display: inline-block;
+	margin-left: 50px;
+	color:#666;
+	text-decoration: none;
+	cursor:pointer;
+}
+
+.hd-nav .search{
+	width: 19px;
+	height: 19px;
+	background:url('../img/search.png') no-repeat 0 1px;
+}
+
+.hd-attention:hover{
+	background: #2fb556 url('../img/+.png') no-repeat 20% 50%;
+}
+
+.hd-nav a:hover{
+	color:#39a030;
+}
+
+.hd-nav .search:hover{
+	background:url('../img/search1.png') no-repeat 0 1px;
+}
+
+.fl{
+	float: left;
+}
+
+.fr{
+	float:right;
+} 
+
+
+
+.m-slider{
+	width: 100%;
+	height: 460px;
+	margin: 0 auto;
+	background: lightblue;
+	text-align: center;
+	overflow: hidden;
+	position: relative;
+}
+
+.m-slider img{
+	position:absolute;
+	height: 100%;
+	left:50%;
+	transform:translateX(-50%);   /*ie8不兼容*/
+}
