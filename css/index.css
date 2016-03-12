@@ -166,6 +166,7 @@ a,a:hover{color:#333;}
 	left: 50%;
 	top: 90%;
 	margin-left: -50px;
+	cursor: default;
 }
 
 .m-slider .slid-cursor li{
