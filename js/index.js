@@ -1,5 +1,9 @@
 
 
+// 定义全局
+
+
+
 //轮播器业务逻辑
 var mSlider = document.querySelector(".m-slider");
 
@@ -44,22 +48,74 @@ cursors.forEach(function(cursor, index){
 
 //完成额外逻辑,设置cursor的class
 slider.on('init',function(ev){
-
 	var pageIndex = ev.pageIndex;
-
 	cursors.forEach(function(cursor, index){
-
 		if(index === pageIndex ){
-
 			cursor.className = 'selected';
-
 		}else{
-
 			cursor.className = '';
 		}
 	})
-
 })
+
+
+
+
+
+//课程列表初始化
+ajax_get('http://study.163.com/webDev/couresByCategory.htm',
+		{'pageNo':1,'psize':20,'type':10},Coures.getCoures);
+
+
+//切换
+var tab=document.querySelector('.m-cor .tab');
+addEvent(tab,'click',function(e){
+	var e=e||window.event;
+	var target=e.target||e.srcElement;
+	if(target.className === 'bt active')return;
+	var container = document.querySelector('.cor-lists');
+	var len=target.parentNode.children.length;
+	for(var i=0;i<len;i++){
+		target.parentNode.children[i].className='bt';
+	}
+	target.className='bt active';
+	if(target.value==="产品设计"){
+		ajax_get('http://study.163.com/webDev/couresByCategory.htm',
+		{'pageNo':1,'psize':20,'type':10},Coures.getCoures);
+	}else if(target.value==="编程语言"){
+		ajax_get('http://study.163.com/webDev/couresByCategory.htm',
+		{'pageNo':1,'psize':20,'type':20},Coures.getCoures);
+	}
+});
+
+var page=new Page();
+
+page.nav();
+
+page.on('nav',function(index){
+	if(/active/.test(tab.children[0].className)){
+		ajax_get('http://study.163.com/webDev/couresByCategory.htm',
+			{'pageNo':index,'psize':20,'type':10},Coures.getCoures);
+	}else{
+		ajax_get('http://study.163.com/webDev/couresByCategory.htm',
+			{'pageNo':index,'psize':20,'type':20},Coures.getCoures);
+	}
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -148,108 +204,3 @@ slider.on('init',function(ev){
 // 	})
 
 // })();
-
-
-
-
-
-
-
-
-
-
-
-/*动态获取课程*/
-var Coures = (function(){
-
-	var template = 
-		'<div class="cor-item">\
-			<img>\
-			<span class="cor-title"></span>\
-			<span class="cor-provider"></span>\
-			<span class="cor-num"><strong></strong></span>\
-			<span class="cor-price"></span>\
-		</div>'
-
-	function getCoures(obj){
-
-		var couresObj = JSON.parse(obj).list;
-		var container = document.querySelector('.cor-lists');
-		var layout = html2node(template);
-
-		//还要给item添加移入移出显示详情方法
-
-		for(var i=0,len=couresObj.length;i<len;i++){
-
-			var item = layout.cloneNode(true);
-
-			container.appendChild(item);
-
-			var img = item.getElementsByTagName('img')[0];
-
-			var itemTitle = item.querySelector('.cor-title');
-
-			var itemPro = item.querySelector('.cor-provider');
-
-			var itemNum = item.querySelector('.cor-num').getElementsByTagName('strong')[0];
-
-			var itemPrice=item.querySelector('.cor-price');
-
-			img.setAttribute('src',couresObj[i].bigPhotoUrl);
-
-			itemTitle.innerText = couresObj[i].name;
-
-			itemPro.innerText = couresObj[i].provider;
-
-			itemNum.innerText = couresObj[i].learnerCount;
-
-			itemPrice.innerText = '￥'+couresObj[i].price;
-
-		}
-	}
-
-	return {
-
-		getCoures : getCoures
-
-	}
-
-})();
-
-//初始化
-ajax_get('http://study.163.com/webDev/couresByCategory.htm',
-		{'pageNo':1,'psize':20,'type':10},Coures.getCoures);
-
-
-//切换
-var tab=document.querySelector('.m-cor .tab');
-tab.onclick=function(e){
-	var e=e||window.event;
-	var target=e.target||e.srcElement;
-	if(target.className === 'bt active')return;
-	var container = document.querySelector('.cor-lists');
-	var len=target.parentNode.children.length;
-	for(var i=0;i<len;i++){
-		target.parentNode.children[i].className='bt';
-	}
-	target.className='bt active';
-	container.innerHTML='';
-	if(target.value==="产品设计"){
-		ajax_get('http://study.163.com/webDev/couresByCategory.htm',
-		{'pageNo':1,'psize':20,'type':10},Coures.getCoures);
-	}else if(target.value==="编程语言"){
-		ajax_get('http://study.163.com/webDev/couresByCategory.htm',
-		{'pageNo':1,'psize':20,'type':20},Coures.getCoures);
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
