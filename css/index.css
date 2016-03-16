@@ -21,6 +21,62 @@ body,textarea,input,button,select,keygen,legend{font:12px/1.14 arial,simsun;colo
 body{background:#fff;}
 a,a:hover{color:#333;}
 
+
+
+/*login*/
+.m-login{
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	display: block;
+	z-index: 100;
+}
+
+.m-login .m-login-mask{
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.8);
+}
+
+.m-login .m-login-wrap{
+	width: 387px;
+	height: 288px;
+	background: #fff;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -194px;
+	margin-top: -144px;
+}
+
+.m-login .m-login-wrap .m-login-head{
+	margin: 30px 0 20px 45px;
+	font: 500 18px/18px 'Microsoft Yahei';
+	color: #444;
+}
+
+.m-login .m-login-wrap input{
+	display: block;
+	width: 295px;
+	height: 45px;
+	margin: 0 auto 15px;
+	padding: 0 5px;
+	border: 1px solid #dfdfdf;
+	box-shadow: 1px 1px 1px #f1f1f1 inset;
+	font: 14px 'Microsoft Yahei'
+}
+
+.m-login .m-login-wrap .submit{
+	width: 310px;
+	color: #fff;
+	background: #2ab14e;
+	box-shadow: 1px 1px 1px #f1f1f1;
+}
+
+
+
 /*小黄条*/
 .m-tips{
 	width: 100%;
@@ -146,6 +202,7 @@ a,a:hover{color:#333;}
 	text-align: center;
 	overflow: hidden;
 	position: relative;
+	z-index: 4;
 }
 
 .m-slider ul li{
@@ -162,11 +219,11 @@ a,a:hover{color:#333;}
 .m-slider .slid-cursor{
 	width: 100px;
 	position: absolute;
-	z-index: 5;
 	left: 50%;
 	top: 90%;
 	margin-left: -50px;
 	cursor: default;
+	z-index: 2;
 }
 
 .m-slider .slid-cursor li{
@@ -340,8 +397,7 @@ a,a:hover{color:#333;}
 }
 
 .m-cor .cor-fl .cor-item .cor-num{
-	min-width: 40px;
-	max-width: 50px;
+	display: inline-block;
 	height: 18px;
 	border: 1px solid #ddd;
 	border-radius: 2px;
@@ -350,6 +406,7 @@ a,a:hover{color:#333;}
 
 .m-cor .cor-fl .cor-item .cor-num strong{
 	display: inline-block;
+	padding-right: 5px;
 	margin-left: 15px;
 	font: 10px/18px 'Microsoft Yahei';
 	color: #bbb;
@@ -380,22 +437,28 @@ a,a:hover{color:#333;}
 
 .m-cor .cor-fl .cor-page .prev{
 	width: 30px;
+	font-size: 0;
 	background: url('../img/prev.png');
 }
 
 .m-cor .cor-fl .cor-page .next{
 	width: 30px;
+	font-size: 0;
 	background: url('../img/next.png');
 }
 
 .m-cor .cor-fl .cor-page a:hover{
-	color: #39a030;
+	color: #fff;
+	background-color: #9dd8b1;
 }
 
 .m-cor .cor-fl .cor-page a.selected{
-	color: #fff;
-	background-color: #9dd8b1;
+	color: #39a030;
 	cursor: default;
+}
+
+.m-cor .cor-fl .cor-page a.selected:hover{
+	background-color: #fff;	
 }
 
 .m-cor .cor-fr{
@@ -411,7 +474,7 @@ a,a:hover{color:#333;}
 	box-shadow: 0px 1px 1px 1px #ecebeb;
 }
 
-.m-cor .cor-fr .title{
+.m-cor .cor-fr .hot-title{
 	height: 55px;
 	padding-left: 21px;
 	border-bottom:1px solid #ddd;
@@ -431,13 +494,27 @@ a,a:hover{color:#333;}
 	cursor:pointer;
 }
 
-.m-cor .cor-fr .hot{
+.m-cor .cor-fr .hot-list{
 	width: 223px;
-	height: 778px;
+	height: 775px;
 	box-shadow: 0px 1px 1px 1px #ecebeb;
+	overflow: hidden;
 }
 
-.m-cor .cor-fr .hot .hotcor{
+.m-cor .cor-fr .hot-list .wrap{
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	position: relative;
+	margin-left: 20px;
+}
+
+.m-cor .cor-fr .hot-list .wrap .hot-wrap{
+	position: absolute;
+	top: 0;
+}
+
+.m-cor .cor-fr .hot-list .hotcor{
 	display: block;
 	width: 183px;
 	height: 50px;
@@ -446,22 +523,25 @@ a,a:hover{color:#333;}
 	color: #333;
 }
 
-.m-cor .cor-fr .hot .hotcor img{
+.m-cor .cor-fr .hot-list .hotcor .hotcor-img{
 	display: inline-block;
+	width: 50px;
+	height: 50px;
 	float: left;
 	margin-right: 10px;
 }
 
-.m-cor .cor-fr .hot .hotcor span{
+.m-cor .cor-fr .hot-list .hotcor .hotcor-title{
 	width: auto;
-	display: inline-block;
+	display: block;
+	margin-bottom: 5px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	vertical-align: baseline;
 }
 
-.m-cor .cor-fr .hot .hotcor .hot-num{
+.m-cor .cor-fr .hot-list .hotcor .hotcor-num{
 	background: url('../img/person.png') no-repeat left 50%;
 	padding-left: 15px;
 	font: 12px 'Microsoft Yahei';
@@ -516,3 +596,7 @@ a,a:hover{color:#333;}
 .m-foot .ft-wrap .ft-text .fr span a:hover{
 	text-decoration: underline;
 }
+
+
+
+

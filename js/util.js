@@ -7,7 +7,7 @@ var toArray = function(s){
      } catch(e){
              var arr = [];
             for(var i = 0,len = s.length; i < len; i++){
-                   arr[i] = s[i];  //据说这样比push快
+                   arr[i] = s[i];  
              }
               return arr;
      }
@@ -19,21 +19,8 @@ function addEvent(ele,type,fn){
   else return ele.attachEvent('on'+type,fn);
 }
 
-//ajax的GET方法
-// function ajax_get(url,opt,callback){
-//     var xhr=new XMLHttpRequest();
-
-//     var opt=serialize(opt);
-//     url=url+'?'+opt;
-//     xhr.open('GET',url,true);
-//     xhr.send(null);
-
-//     xhr.onload=function(){
-//       callback(xhr.responseText);
-//     }
-//   }
-
-function ajax_get(url,options,callback){
+//ajax get方法
+function get(url,options,callback){
   var XHR=(function(){//创建XHR对象
     if(typeof window.XMLHttpRequest!=='undefined')return new XMLHttpRequest();
     else if(typeof ActiveXObject!=='undefined'){
@@ -51,7 +38,10 @@ function ajax_get(url,options,callback){
     }
   })();
 
-  var opt=serialize(options);
+  if(typeof options==='object'){
+    var opt=serialize(options);
+    url+='?'+opt;
+  }
 
   XHR.onreadystatechange=function(){
     if(XHR.readyState==4){
@@ -63,7 +53,7 @@ function ajax_get(url,options,callback){
     }
   }
 
-  XHR.open('GET',url+'?'+opt,true);
+  XHR.open('GET',url,true);
   XHR.send(null);
 }
 
@@ -80,12 +70,14 @@ function serialize(obj){
   return arr.join('&');
 }
 
+//转换节点并输出
 function html2node(str){
     var container = document.createElement('div');
     container.innerHTML = str;
     return container.children[0];
   }
 
+//订阅发布
 var emitter = {
   // 注册事件
   on: function(event, fn) {
@@ -133,13 +125,6 @@ var emitter = {
   }
 }
 
-
-function html2node(str){
-    var container = document.createElement('div');
-    container.innerHTML = str;
-    return container.children[0];
-  }
-
   // 赋值属性
   // extend({a:1}, {b:1, a:2}) -> {a:1, b:1}
   function extend(o1, o2){
@@ -149,47 +134,31 @@ function html2node(str){
     return o1
   }
 
-
-
-
-
-
-if ( !Array.prototype.forEach ) {
-  Array.prototype.forEach = function forEach( callback, thisArg ) {
-    var T, k;
-    if ( this == null ) {
-      throw new TypeError( "this is null or not defined" );
-    }
-    var O = Object(this);
-    var len = O.length >>> 0; 
-    if ( typeof callback !== "function" ) {
-      throw new TypeError( callback + " is not a function" );
-    }
-    if ( arguments.length > 1 ) {
-      T = thisArg;
-    }
-    k = 0;
-    while( k < len ) {
-      var kValue;
-    if ( k in O ) {
-      kValue = O[ k ];
-      callback.call( T, kValue, k, O );
-    }
-      k++;
-    }
-  };
+//foreach兼容
+if (!Array.prototype.forEach) {  
+    Array.prototype.forEach = function(fun /*, thisp*/){  
+        var len = this.length;  
+        if (typeof fun != "function")  
+            throw new TypeError();  
+        var thisp = arguments[1];  
+        for (var i = 0; i < len; i++){  
+            if (i in this)  
+                fun.call(thisp, this[i], i, this);  
+        }  
+    };  
 }
 
+//判断是否是IE
 function isIE(){ //ie? 
    if (window.navigator.userAgent.toLowerCase().indexOf("msie")>=1) {
      return true; 
    }
    else {
       return false; 
-   }
-    
+   }   
 } 
 
+//兼容innerTEXT
 if(!isIE()){ //firefox innerText define
    HTMLElement.prototype.__defineGetter__("innerText", 
     function(){
@@ -204,9 +173,68 @@ if(!isIE()){ //firefox innerText define
      return anyString;
     } 
    ); 
-   HTMLElement.prototype.__defineSetter__(     "innerText", 
+   HTMLElement.prototype.__defineSetter__("innerText", 
     function(sText){ 
      this.textContent=sText; 
     } 
    ); 
 }
+
+function setCookie(name,value,expires,path,domain,secure){
+  var cookie=encodeURIComponent(name)+'='+encodeURIComponent(value);
+  if(expires)cookie+=';expires='+expires.toGMTString();
+  if(path)cookie+=';path'+path;
+  if(domain)cookie+=';domain'+domain;
+  if(secure)secure+=';secure'+secure;
+  document.cookie=cookie;
+}
+
+function getCookie () {
+  var cookie = {};
+  var all = document.cookie;
+  if (all === '')
+      return cookie;
+  var list = all.split('; ');
+  for (var i = 0; i < list.length; i++) {
+      var item = list[i];
+      var p = item.indexOf('=');
+      var name = item.substring(0, p);
+      name = decodeURIComponent(name);
+      var value = item.substring(p + 1);
+      value = decodeURIComponent(value);
+      cookie[name] = value;
+  }
+  return cookie;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

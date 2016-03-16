@@ -2,9 +2,7 @@
 
 // 定义全局
 
-
-
-//轮播器业务逻辑
+//轮播器
 var mSlider = document.querySelector(".m-slider");
 
 var cursor = mSlider.querySelector('.slid-cursor');
@@ -59,48 +57,44 @@ slider.on('init',function(ev){
 })
 
 
+//右侧模块
+var wrap=document.querySelector('.hot-wrap');
 
-
-
-//课程列表初始化
-ajax_get('http://study.163.com/webDev/couresByCategory.htm',
-		{'pageNo':1,'psize':20,'type':10},Coures.getCoures);
-
-
-//切换
-var tab=document.querySelector('.m-cor .tab');
-addEvent(tab,'click',function(e){
-	var e=e||window.event;
-	var target=e.target||e.srcElement;
-	if(target.className === 'bt active')return;
-	var container = document.querySelector('.cor-lists');
-	var len=target.parentNode.children.length;
-	for(var i=0;i<len;i++){
-		target.parentNode.children[i].className='bt';
-	}
-	target.className='bt active';
-	if(target.value==="产品设计"){
-		ajax_get('http://study.163.com/webDev/couresByCategory.htm',
-		{'pageNo':1,'psize':20,'type':10},Coures.getCoures);
-	}else if(target.value==="编程语言"){
-		ajax_get('http://study.163.com/webDev/couresByCategory.htm',
-		{'pageNo':1,'psize':20,'type':20},Coures.getCoures);
-	}
-});
-
-var page=new Page();
-
-page.nav();
-
-page.on('nav',function(index){
-	if(/active/.test(tab.children[0].className)){
-		ajax_get('http://study.163.com/webDev/couresByCategory.htm',
-			{'pageNo':index,'psize':20,'type':10},Coures.getCoures);
+function toRun(ele){
+	oTop=parseInt(window.getComputedStyle(ele,null)['top']);
+	if(parseInt(ele.style.top)<=-700){
+		for(var i=0;i<=20;i++){
+			(function(){
+				var oMove=35*i;
+				setTimeout(function(){
+					ele.style.top=oTop+oMove+'px';
+				},i*25)
+			})(i);
+		}
 	}else{
-		ajax_get('http://study.163.com/webDev/couresByCategory.htm',
-			{'pageNo':index,'psize':20,'type':20},Coures.getCoures);
+		for(var i=0;i<=20;i++){
+			(function(){
+				var oMove=3.5*i;
+				setTimeout(function(){
+					ele.style.top=oTop-oMove+'px';
+				},i*25)
+			})(i);
+		}
 	}
-})
+}
+
+setInterval(function(){
+	toRun(wrap);
+},5000);
+
+
+var attention = document.querySelector('.hd-attention');
+
+var login=document.querySelector('.m-login');
+
+addEvent(attention,'click',function(){
+	login.style.display='block';
+})	
 
 
 
@@ -123,6 +117,78 @@ page.on('nav',function(index){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// //页码
+// var corPage=document.querySelector('.cor-page');
+
+// var page = new Page({
+// 	container : corPage,  //容器
+
+// 	length : 8,	 //页码显示长度
+
+
+//     // pageNum : pageNum, //总页数
+
+// });
+
+
+// //课程列表初始化
+// ajax_get('http://study.163.com/webDev/couresByCategory.htm',
+// 		{'pageNo':1,'psize':20,'type':10},Coures.getCoures);
+
+
+//Tab切换
+// var tab=document.querySelector('.m-cor .tab');
+// addEvent(tab,'click',function(e){
+// 	var e=e||window.event;
+// 	var target=e.target||e.srcElement;
+// 	if(target.className === 'bt active')return;
+// 	var container = document.querySelector('.cor-lists');
+// 	var len=target.parentNode.children.length;
+// 	for(var i=0;i<len;i++){
+// 		target.parentNode.children[i].className='bt';
+// 	}
+
+// 	//需要加一个page初始化的程序
+// 	target.className='bt active';
+// 	if(target.value==="产品设计"){
+// 		ajax_get('http://study.163.com/webDev/couresByCategory.htm',
+// 		{'pageNo':1,'psize':20,'type':10},Coures.getCoures);
+// 	}else if(target.value==="编程语言"){
+// 		ajax_get('http://study.163.com/webDev/couresByCategory.htm',
+// 		{'pageNo':1,'psize':20,'type':20},Coures.getCoures);
+// 	}
+// });
+
+// //切换同时改变课程内容
+// page.on('nav',function(index){//改变页码时动态获取课程
+// 	//产品设计课程
+// 	if(/active/.test(tab.children[0].className)){
+// 		ajax_get('http://study.163.com/webDev/couresByCategory.htm',
+// 			{'pageNo':index,'psize':20,'type':10},Coures.getCoures);
+// 	}else{//编程语言课程
+// 		ajax_get('http://study.163.com/webDev/couresByCategory.htm',
+// 			{'pageNo':index,'psize':20,'type':20},Coures.getCoures);
+// 	}
+// })
 
 
 // (function(){
