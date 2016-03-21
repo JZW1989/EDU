@@ -1,6 +1,114 @@
 
 
 
+/*顶部通知栏*/
+(function(){
+
+	var tips=document.querySelector('.m-tips');
+
+	var close=tips.querySelector('.tp-close');
+
+	if(!getCookie()['noTips']){
+		tips.style.display='block';
+		var date=new Date();
+		var expires=date.getDate()+1;
+		setCookie('noTips','true',expires);
+	}
+
+	addEvent(close,'click',function(){
+		tips.style.display='none';
+	})
+
+	
+
+})();
+
+
+/*
+ * 弹窗组件	
+ * 传入参数
+ * trig为触发弹窗的DOM元素,触发方式为click	
+ * type为弹窗类型,以传入的className取得相应的弹窗(login为登录框，video为视频弹窗)
+ * 
+ */
+(function(){
+	
+	var Pop=function(opt){
+
+		extend(this,opt);
+
+		var mask = document.querySelector('.mask');
+
+		console.log(opt.type)
+
+		this.mask = mask;
+
+		this.popup = this.mask.querySelector(this.type);
+
+		this.close = this.popup.querySelector('.close');
+
+		this._init();
+
+	}
+
+	extend(Pop.prototype,{
+		//弹窗
+		_show : function(){
+			this.mask.style.display='block';
+			this.popup.style.display='block';
+		},
+		//关闭
+		hide : function(){
+			this.mask.style.display='none';
+			this.popup.style.display='none';
+		},
+
+		_init : function(){
+			this.trig.onclick=this._show.bind(this);
+			addEvent(this.close,'click',this.hide.bind(this));
+		}
+	})
+
+	extend(Pop.prototype,emitter);
+
+	window.Pop=Pop;
+})();
+
+
+/*表单组件*/
+// (function(){
+
+// 	var Form=function(opt){
+
+// 		extend(Form.prototype,opt);
+
+// 		this.form=this.form;
+
+// 		this.src=this.src;
+
+// 		this.submit = document.forms[this.form].elements['submit'];
+
+// 		this.user = document.forms[this.form].querySelector['user'];
+
+// 		this.pass = document.forms[this.form].querySelector['pass'];
+
+// 	}
+
+// 	extend(Form.prototype,{
+
+// 		submit : function(){
+
+// 		},
+
+// 		_init : function(){
+
+// 		}
+
+
+// 	});
+
+
+// })();
 
 /*轮播器组件*/
 //图片地址传参作为下一步考虑
@@ -14,7 +122,7 @@
 
 	var Slider = function(opt){
 		//配置参数
-		extend(Slider.prototype,opt); 
+		extend(this,opt); 
 
 		this.container = this.container || document.body;
 
@@ -39,18 +147,18 @@
 	_layout: html2node(template),
 
 	//淡入效果
-	fadeIn: function (ele){
+	_fadeIn: function (ele){
 	    ele.style.opacity=0;
 	    //兼容IE
 	    ele.style.filter='alpha(opacity='+0+')';
 	    ele.style.display='block';
-	    for(var i=1;i<=10;i++){
+	    for(var i=1;i<=20;i++){
 	    	(function(){
-		        var num=i*0.1;
+		        var num=i*0.05;
 		        setTimeout(function(){
 		            ele.style.opacity=num;
-		            ele.style.filter='alpha(opacity='+i*10+')';
-		        },i*50);
+		            ele.style.filter='alpha(opacity='+i*5+')';
+		        },i*25);
 		    })(i);
 	    }
 	},
@@ -63,18 +171,22 @@
 		}else{
 			this.pageIndex=0;
 		}
-		this.init();
+		this.init(this.pageIndex);
 	},
 
 	//直接跳转()
 	init: function (pageIndex){
-		//将图片设置成display:none
 		if(arguments.length!==0)this.pageIndex=pageIndex;
 		for(var i=0;i<len;i++){
+			//将所有图片设置成display:none
 			this.imgs[i].style.display='none';
+			//透明度设为0
+			this.imgs[i].style.opacity=0;
+	   		//兼容IE
+	    	this.imgs[i].style.filter='alpha(opacity='+0+')';
 		}
 		//将对应的图片设置成显示
-		this.fadeIn(this.imgs[this.pageIndex]);
+		this._fadeIn(this.imgs[this.pageIndex]);
 		//this.imgs[this.pageIndex].style.display='inline-block';
 		//完成额外逻辑，提供index参数
 		this.emit('init',{
@@ -82,12 +194,15 @@
 		})
 	},
 	})
+
 	window.Slider=Slider;
+
 })();
 
 
+
 //获取课程和页码
-var Course = (function(){
+(function(){
 	var url='http://study.163.com/webDev/couresByCategory.htm';
 	var pageNo = 1,
 		type = 10,
@@ -117,7 +232,7 @@ var Course = (function(){
 	})
 
 
-	//获取页码总数和页码第一页
+	//获取页码总数和页码第一页，用于页面载入和tab切换
 	function getNum(now){	
 		var options={'pageNo':now,'type':type,'psize':psize};
 		get(url,options,function(response){
@@ -176,6 +291,7 @@ var Course = (function(){
 			itemNum.innerText = couresObj[i].learnerCount;
 			itemPrice.innerText = '￥'+couresObj[i].price;
 		}
+		//添加hover事件
 	}
 
 	//页码模块 参考前端某位学长
@@ -268,10 +384,10 @@ var Course = (function(){
 })()
 
 
-
+//右侧模块 需要优化及模块化
 var hotCoures = (function(){
 
-	var url='http://study.163.com/webDev/hotcouresByCategory.htm'
+	var url='http://study.163.com/webDev/hotcouresByCategory.htm';
 
 
 	function _getHotCoures(response){
@@ -308,35 +424,163 @@ var hotCoures = (function(){
 
 })();
 
+var wrap=document.querySelector('.hot-wrap');
+
+function toRun(ele){
+	oTop=parseInt(window.getComputedStyle(ele,null)['top']);
+	if(parseInt(ele.style.top)<=-700){
+		for(var i=0;i<=20;i++){
+			(function(){
+				var oMove=35*i;
+				setTimeout(function(){
+					ele.style.top=oTop+oMove+'px';
+				},i*25)
+			})(i);
+		}
+	}else{
+		for(var i=0;i<=100;i++){
+			(function(){
+				var oMove=0.7*i;
+				setTimeout(function(){
+					ele.style.top=oTop-oMove+'px';
+				},i*5)
+			})(i);
+		}
+	}
+}
+
+setInterval(function(){
+	toRun(wrap);
+},5000);
 
 
-(function(){
-
-	var templates=''
 
 
 
 
 
+//登录模块  是否能设置成弹窗组件？？登录弹窗组件
+// (function(){
+// 	var attention=document.querySelector('.hd-attention');
+
+// 	var attentioned=document.querySelector('.hd-attentioned');
+
+// 	var fanNum=document.querySelector('.hd-fan').getElementsByTagName('strong')[0];
+
+// 	var attenCancel=document.querySelector('.hd-attention-cancel');
+
+// 	var login=document.querySelector('.m-login');
+
+// 	var loginForm=document.querySelector('.m-login-wrap');
+
+// 	var loginClose=loginForm.querySelector('.m-login-close');
+
+// 	var user=loginForm.querySelector('.user');
+
+// 	var pass=loginForm.querySelector('.pass');
+
+// 	var submit=loginForm.querySelector('.submit');
+
+// 	var flag=true;
+
+// 	var url='http://study.163.com/webDev/login.htm';
+
+
+// 	addEvent(attention,'click',function(){
+// 		//判断loginSuc是否设置，未设置则弹出登录框输账号密码
+// 		if(!getCookie()['loginSuc']){
+// 			//先弹出登录框
+// 			login.style.display='block';
+// 			//添加关闭事件
+// 			addEvent(loginClose,'click',function(){
+// 				login.style.display='none'; 
+// 			});
+
+// 			//表单验证
+// 			//客户端验证  仅进行是否值为空的验证
+// 			//值为空时，相应的边框设置为红色
+// 			addEvent(user,'blur',function(){
+// 				if(user.value==''){
+// 					user.style.border='1px solid red';
+// 					flag=false;
+// 				}
+// 			})
+// 			addEvent(user,'focus',function(){
+// 					user.style.border='1px solid #dfdfdf';
+// 			})
+
+// 			addEvent(pass,'blur',function(){
+// 				if(pass.value==''){
+// 					pass.style.border='1px solid red';
+// 					flag=false;
+// 				}
+// 			})
+// 			addEvent(pass,'focus',function(){
+// 					pass.style.border='1px solid #dfdfdf';
+// 			})
+// 		}else{//如果已经设置loginSuc,则显直接改变样式，设置为登录
+// 			//改变样式，设置关注
+// 			attention.style.display='none';
+// 			attentioned.style.display='inline-block';
+// 			//粉丝数+1；
+// 			fanNum.innerHTML=parseInt(fanNum.innerHTML)+1;
+// 		}
+
+// 	})
+
+// 	function setAttention(response){
+// 				//response是string
+// 				if(response==1){
+// 					//关闭登录框
+// 					login.style.display='none';
+// 					//改变样式，设置关注
+// 					attention.style.display='none';
+// 					attentioned.style.display='inline-block';
+// 					//粉丝数+1；
+// 					fanNum.innerHTML=parseInt(fanNum.innerHTML)+1;
+					
+// 					//设置cookie
+// 					var date=new Date();
+// 					var expires=date.getDate()+1;
+// 					setCookie('loginSuc',true,expires);
+					 
+// 					//console.log('成功')
+// 				}else{
+// 					//提示错误信息
+					
+// 				}	
+// 			}
+
+// 	//按按钮或按回车时进行提交
+// 	addEvent(submit,'click',function(){
+// 		if(flag){
+// 			get(url,
+// 			{userName:md5(user.value),password:md5(pass.value)},
+// 			setAttention);
+// 		}else{
+// 			//提示错误信息 直接提示用户名或密码错误
+// 		}
+		
+// 	})
+// 	//回车提交Enterkey
+
+// 	addEvent(attenCancel,'click',function(){
+// 		attentioned.style.display='none';
+// 		attention.style.display='inline-block';
+
+// 		fanNum.innerHTML=parseInt(fanNum.innerHTML)-1;
+// 	})
+// 	//console.log(e.keyDown)
+
+// })()
+
+
+
+//视频弹窗
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-})()
 
 
 

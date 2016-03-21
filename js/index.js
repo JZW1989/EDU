@@ -1,6 +1,117 @@
 
 
-// 定义全局
+
+//关注登录
+var attention=document.querySelector('.hd-attention');
+
+var attentioned=document.querySelector('.hd-attentioned');
+
+var fanNum=document.querySelector('.hd-fan').getElementsByTagName('strong')[0];
+
+var attenCancel=document.querySelector('.hd-attention-cancel');
+
+var loginPop=new Pop({
+			type : '.login',
+			trig : attention
+		});
+
+
+function setAttention(response){
+	//response是string
+	if(response==1){
+		error.style.display='none';
+		loginPop.hide();
+		follow();
+		//设置cookie
+		var date=new Date();
+		var expires=date.getDate()+1;
+		setCookie('loginSuc',true,expires);
+		//console.log('成功')
+	}else{
+		error.style.display='inline-block';
+	}	
+}
+
+function follow(){
+	//改变样式，设置关注
+	attention.style.display='none';
+	attentioned.style.display='inline-block';
+	//粉丝数+1；
+	fanNum.innerHTML=parseInt(fanNum.innerHTML)+1;
+	//用onclick事件覆盖之前的事件
+	attention.onclick=follow;
+}
+
+if(typeof getCookie()['loginSuc']!=='undefined'){//有cookie直接设置
+	//用onclick事件覆盖之前的事件
+	attention.onclick=follow;
+}else{//没cookie显示表单，进行验证
+	//客户端验证
+	//仅进行值是否为空的验证
+	var user=document.forms['login'].querySelector('.user');
+
+	var pass=document.forms['login'].querySelector('.pass');
+
+	var submit=document.forms['login'].querySelector('.submit');
+
+	var error=document.forms['login'].querySelector('.error');
+
+	var flag=true;
+	//值为空时，相应的边框设置为红色
+	addEvent(user,'blur',function(){
+		if(user.value==''){
+			user.style.border='1px solid red';
+			flag=false;
+		}
+	})
+	addEvent(user,'focus',function(){
+			user.style.border='1px solid #dfdfdf';
+			flag=true;
+	})
+
+	addEvent(pass,'blur',function(){
+		if(pass.value==''){
+			pass.style.border='1px solid red';
+			flag=false;
+		}
+	})
+	addEvent(pass,'focus',function(){
+			pass.style.border='1px solid #dfdfdf';
+			flag=true;
+	})
+
+	addEvent(submit,'click',function(){
+		//提交按钮设置为不可点击
+		if(!flag){//值为空时
+			error.style.display='inline-block';
+			console.log('错误1');
+		}else{//将数据发送服务器进行验证
+			get('http://study.163.com/webDev/login.htm',
+				{userName:md5(user.value),password:md5(pass.value)},
+				setAttention);
+		}
+	})
+
+}
+
+addEvent(attenCancel,'click',function(){
+	attentioned.style.display='none';
+	attention.style.display='inline-block';
+	//粉丝数-1；
+	fanNum.innerHTML=parseInt(fanNum.innerHTML)-1;
+})
+
+
+
+
+//视频弹窗
+var corVideo=document.querySelector('.cor-video').getElementsByTagName('img')[0];
+var videoPop=new Pop({
+	type:'.video',
+	trig: corVideo
+});
+
+
 
 //轮播器
 var mSlider = document.querySelector(".m-slider");
@@ -57,44 +168,6 @@ slider.on('init',function(ev){
 })
 
 
-//右侧模块
-var wrap=document.querySelector('.hot-wrap');
-
-function toRun(ele){
-	oTop=parseInt(window.getComputedStyle(ele,null)['top']);
-	if(parseInt(ele.style.top)<=-700){
-		for(var i=0;i<=20;i++){
-			(function(){
-				var oMove=35*i;
-				setTimeout(function(){
-					ele.style.top=oTop+oMove+'px';
-				},i*25)
-			})(i);
-		}
-	}else{
-		for(var i=0;i<=20;i++){
-			(function(){
-				var oMove=3.5*i;
-				setTimeout(function(){
-					ele.style.top=oTop-oMove+'px';
-				},i*25)
-			})(i);
-		}
-	}
-}
-
-setInterval(function(){
-	toRun(wrap);
-},5000);
-
-
-var attention = document.querySelector('.hd-attention');
-
-var login=document.querySelector('.m-login');
-
-addEvent(attention,'click',function(){
-	login.style.display='block';
-})	
 
 
 
@@ -102,6 +175,29 @@ addEvent(attention,'click',function(){
 
 
 
+
+
+
+
+
+
+
+// var tipClose=document.querySelector('.tp-close');
+// tipClose.onclick=function(){
+// 	tips.style.display='none';
+// 	var date=new Date();
+// 	// var expirs=date.getTime()+24*3600*1000;
+// 	var expirs=date.getTime()-1;
+// 	setCookie('noTips','true',expires);
+// }
+
+
+//设置小黄条的cookie
+// var Tips=(function(){
+// 	var tips=document.querySelector('.m-tips');
+	
+	
+// })()
 
 
 

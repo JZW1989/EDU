@@ -21,7 +21,8 @@
 		</div>
 		<div class="hd-login fl">
 			<input class="hd-attention" type="button" value="关注" />
-			<span class="hd-fan">粉丝 45</span>
+			<span class="hd-attentioned">已关注<em>|</em><a class="hd-attention-cancel">取消</a></span>
+			<span class="hd-fan">粉丝 <strong>45</strong></span>
 		</div>
 		<div class="hd-nav fr">
 				<a href="http://open.163.com/" target="_blank">网易公开课</a>
@@ -46,13 +47,13 @@
 
 	<div class="m-product">
 		<ul>
-			<li class="pd-item" style="background-image:url(img/云课堂_logo.png)">
+			<li class="pd-item" style="background-image:url(img/公开课_logo.png)">
 				<h3 class="title">网易公开课</h3>
 				<p class="text">推出国内外名校公开课，涉及广泛的学科，名校老师认真讲解深度剖析，网易视频公开课频道搭建起强有力的网络视频教学平台。
 				</p>
 				<a class="link" href="">了解更多</a>
 			</li>
-			<li class="pd-item" style="background-image:url(img/公开课_logo.png)">
+			<li class="pd-item" style="background-image:url(img/云课堂_logo.png)">
 				<h3 class="title">云课堂</h3>
 				<p class="text">网易旗下大型在线学习平台，该平台面向学习者提供海量免费、优质课程,创新的个性化学习体验，自由开放的交流互动环境。
 				</p>
@@ -106,79 +107,19 @@
 		</div>
 
 		<div class="cor-fr">
-			<div class="video">
+			<div class="cor-video">
 				<h3 class="title">机构介绍</h3>
 				<p>观看下面的视频了解吧：</p>
 				<img src="img/video.jpg" width="180px" height="110px">
 			</div>
 			<div class="hot-list">
-				<h3 class="hot-title">最热排行</h3>
+				<h3 class="title">最热排行</h3>
 				<div class="wrap">
 				<div class="hot-wrap">
 				<!-- <div class="hotcor">
 					<img src="img/hotcor1.jpg" width="50px" height="50px">
 					<span hotcor-title>舞曲揭秘音乐揭秘</span>
 					<span class="hotcor-num">21567</span>
-				</div>
-				<div class="hotcor">
-					<img src="img/hotcor1.jpg" width="50px" height="50px">
-					<span>舞曲揭秘音乐揭秘</span>
-					<span class="hot-num">21567</span>
-				</div>
-				<div class="hotcor">
-					<img src="img/hotcor1.jpg" width="50px" height="50px">
-					<span>舞曲揭秘音乐揭秘</span>
-					<span class="hot-num">21567</span>
-				</div>
-				<div class="hotcor">
-					<img src="img/hotcor1.jpg" width="50px" height="50px">
-					<span>舞曲揭秘音乐揭秘</span>
-					<span class="hot-num">21567</span>
-				</div>
-				<div class="hotcor">
-					<img src="img/hotcor1.jpg" width="50px" height="50px">
-					<span>舞曲揭秘音乐揭秘</span>
-					<span class="hot-num">21567</span>
-				</div>
-				<div class="hotcor">
-					<img src="img/hotcor1.jpg" width="50px" height="50px">
-					<span>舞曲揭秘音乐揭秘</span>
-					<span class="hot-num">21567</span>
-				</div>
-				<div class="hotcor">
-					<img src="img/hotcor1.jpg" width="50px" height="50px">
-					<span>舞曲揭秘音乐揭秘</span>
-					<span class="hot-num">21567</span>
-				</div>
-				<div class="hotcor">
-					<img src="img/hotcor1.jpg" width="50px" height="50px">
-					<span>舞曲揭秘音乐揭秘</span>
-					<span class="hot-num">21567</span>
-				</div>
-				<div class="hotcor">
-					<img src="img/hotcor1.jpg" width="50px" height="50px">
-					<span>舞曲揭秘音乐揭秘</span>
-					<span class="hot-num">21567</span>
-				</div>
-				<div class="hotcor">
-					<img src="img/hotcor1.jpg" width="50px" height="50px">
-					<span>舞曲揭秘音乐揭秘</span>
-					<span class="hot-num">21567</span>
-				</div>
-				<div class="hotcor">
-					<img src="img/hotcor1.jpg" width="50px" height="50px">
-					<span>舞曲揭秘音乐揭秘</span>
-					<span class="hot-num">21567</span>
-				</div>
-				<div class="hotcor">
-					<img src="img/hotcor1.jpg" width="50px" height="50px">
-					<span>舞曲揭秘音乐揭秘</span>
-					<span class="hot-num">21567</span>
-				</div>
-				<div class="hotcor">
-					<img src="img/hotcor1.jpg" width="50px" height="50px">
-					<span>舞曲揭秘音乐揭秘</span>
-					<span class="hot-num">21567</span>
 				</div> -->
 				</div>
 				</div>
@@ -217,21 +158,39 @@
 
 	
 
-	<div class="m-login">
+<!-- 	<div class="m-login">
 		<div class="m-login-mask">
-			<div class="m-login-wrap">
+			<form class="m-login-wrap">
+				<span class="m-login-close"></span>
 				<h3 class="m-login-head">登录云课堂</h3>
-				
 				<div class="m-login-body">
-					<input type="text" placeholder="账号">
-					<input type="password" placeholder="密码">
+					<input class="user" type="text" placeholder="账号">
+					<input class="pass" type="password" placeholder="密码">
 					<input class="submit" type="button" value="登录">
 				</div>
+			</form>
+		</div>
+	</div> -->
+
+	<div class="mask">
+		<form name="login" class="login">
+			<span class="close"></span>
+			<h3 class="m-login-head">登录云课堂</h3>
+			<span class="error">用户名或密码错误，请重新输入</span>
+			<div class="m-login-body">
+				<input class="user" type="text" placeholder="账号" value="studyOnline">
+				<input class="pass" type="password" placeholder="密码" value="study.163.com">
+				<input class="submit" type="button" value="登录">
 			</div>
+		</form>
+		<div class="video">
+			<span class="close"></span>
+			<h3 class="m-video-head">请观看下面的视频</h3>
+			<video controls width="850px" src="http://mov.bn.netease.com/open-movie/nos/mp4/2014/12/30/SADQ86F5S_shd.mp4"></video>
 		</div>
 	</div>
 	
-
+	<script type="text/javascript" src="js/md5.min.js"></script>
 	<script type="text/javascript" src="js/util.js"></script>
 	<script type="text/javascript" src="js/module.js"></script>
 	<script type="text/javascript" src="js/index.js"></script>

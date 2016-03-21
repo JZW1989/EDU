@@ -24,13 +24,13 @@ a,a:hover{color:#333;}
 
 
 /*login*/
-.m-login{
+/*.m-login{
 	position: fixed;
 	left: 0;
 	top: 0;
 	width: 100%;
 	height: 100%;
-	display: block;
+	display: none;
 	z-index: 100;
 }
 
@@ -51,9 +51,19 @@ a,a:hover{color:#333;}
 	margin-top: -144px;
 }
 
+.m-login .m-login-wrap .m-login-close{
+	display: inline-block;
+	margin: 10px;
+	float: right;
+	width: 10px;
+	height: 10px;
+	background: url('../img/close.png') no-repeat left top;
+	cursor: pointer;
+}
+
 .m-login .m-login-wrap .m-login-head{
-	margin: 30px 0 20px 45px;
-	font: 500 18px/18px 'Microsoft Yahei';
+	margin: 28px 0 28px 45px;
+	font: 600 18px/18px 'Microsoft Yahei';
 	color: #444;
 }
 
@@ -73,12 +83,100 @@ a,a:hover{color:#333;}
 	color: #fff;
 	background: #2ab14e;
 	box-shadow: 1px 1px 1px #f1f1f1;
+}*/
+
+.mask{
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+	z-index: 100;
+	background: rgba(0,0,0,0.8);
+}
+
+.login{
+	display: none;
+	width: 387px;
+	height: 288px;
+	background: #fff;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -194px;
+	margin-top: -144px;
+}
+
+.mask .close{
+	display: inline-block;
+	margin: 10px;
+	float: right;
+	width: 10px;
+	height: 10px;
+	background: url('../img/close.png') no-repeat left top;
+	cursor: pointer;
+}
+
+.login .m-login-head{
+	margin: 28px 0 28px 45px;
+	font: 600 16px/18px 'Microsoft Yahei';
+	color: #444;
+}
+
+.login .error{
+	display: none;
+	margin: 0 0 10px 40px;
+	font: 14px 'Microsoft Yahei';
+	color: red;
+}
+
+.login  input{
+	display: block;
+	width: 295px;
+	height: 45px;
+	margin: 0 auto 15px;
+	padding: 0 5px;
+	border: 1px solid #dfdfdf;
+	box-shadow: 1px 1px 1px #f1f1f1 inset;
+	font: 14px 'Microsoft Yahei';
+}
+
+.login .submit{
+	width: 310px;
+	color: #fff;
+	background: #2ab14e;
+	box-shadow: 1px 1px 1px #f1f1f1;
+}
+
+.video{
+	display: none;
+	width: 850px;
+	height: 576px;
+	background: #fff;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -425px;
+	margin-top: -298px; 
+}
+
+.vidoe video{
+	display: block;
+	margin: 0 auto;
+}
+
+.m-video-head{
+	margin: 28px 0 10px 10px;
+	font:16px/18px 'Microsoft Yahei';
+	color: #444;
 }
 
 
 
 /*小黄条*/
 .m-tips{
+	display: none;
 	width: 100%;
 	height: 36px;
 	background: #f3f3f3;
@@ -148,6 +246,36 @@ a,a:hover{color:#333;}
 	cursor:pointer;
 }
 
+.hd-attentioned{
+	display: none;
+	margin:34px 13px 34px 31px;
+	width: 84px;
+	height: 21px;
+	padding-left:20px;
+	border: 1px solid #efefef;
+	border-radius: 1px;
+	background: url('../img/ok.png') no-repeat 5% center;
+	font:normal 12px/21px 'simsun';
+	color: #333;
+}
+
+.hd-attentioned em{
+	margin-left: 5px;
+	font:normal 10px/21px 'simsun';
+	color: #999;
+}
+
+.hd-attentioned a{
+	display: inline-block;
+	margin-left:5px;
+	color: #999;
+}
+
+
+.hd-attentioned a:hover{
+	color: #21a557;
+	text-decoration: underline;
+}
 
 .hd-fan{
 	display: inline-block;
@@ -467,28 +595,28 @@ a,a:hover{color:#333;}
 	float:right;
 }
 
-.m-cor .cor-fr .video{
+.m-cor .cor-fr .cor-video{
 	width: 223px;
 	height: 229px;
 	margin:84px 0 21px;
 	box-shadow: 0px 1px 1px 1px #ecebeb;
 }
 
-.m-cor .cor-fr .hot-title{
+.m-cor .cor-fr .title{
 	height: 55px;
 	padding-left: 21px;
 	border-bottom:1px solid #ddd;
 	font:16px/55px 'Microsoft Yahei';
 }
 
-.m-cor .cor-fr .video p{
+.m-cor .cor-fr .cor-video p{
 	margin-top: 18px;
 	padding-left: 21px;
 	color:#666;
 	font:14px/22px 'Microsoft Yahei';
 }
 
-.m-cor .cor-fr .video img{
+.m-cor .cor-fr .cor-video img{
 	display: block;
 	margin: 0 auto;
 	cursor:pointer;
