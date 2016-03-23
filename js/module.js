@@ -1,7 +1,7 @@
 
 
 
-/*顶部通知栏*/
+/***************顶部通知栏*********************/
 (function(){
 
 	var tips=document.querySelector('.m-tips');
@@ -14,16 +14,15 @@
 		var expires=date.getDate()+1;
 		setCookie('noTips','true',expires);
 	}
-
 	addEvent(close,'click',function(){
 		tips.style.display='none';
 	})
-
-	
-
 })();
+/***************顶部通知栏*********************/
 
 
+
+/***************弹窗部分*********************/
 /*
  * 弹窗组件	
  * 传入参数
@@ -38,8 +37,6 @@
 		extend(this,opt);
 
 		var mask = document.querySelector('.mask');
-
-		console.log(opt.type)
 
 		this.mask = mask;
 
@@ -69,47 +66,125 @@
 		}
 	})
 
-	extend(Pop.prototype,emitter);
-
 	window.Pop=Pop;
 })();
 
 
-/*表单组件*/
-// (function(){
 
-// 	var Form=function(opt){
+/*登录弹窗及验证*/
+var attention=document.querySelector('.hd-attention');
 
-// 		extend(Form.prototype,opt);
+var attentioned=document.querySelector('.hd-attentioned');
 
-// 		this.form=this.form;
+var fanNum=document.querySelector('.hd-fan').getElementsByTagName('strong')[0];
 
-// 		this.src=this.src;
+var attenCancel=document.querySelector('.hd-attention-cancel');
 
-// 		this.submit = document.forms[this.form].elements['submit'];
-
-// 		this.user = document.forms[this.form].querySelector['user'];
-
-// 		this.pass = document.forms[this.form].querySelector['pass'];
-
-// 	}
-
-// 	extend(Form.prototype,{
-
-// 		submit : function(){
-
-// 		},
-
-// 		_init : function(){
-
-// 		}
+var loginPop=new Pop({
+			type : '.login',
+			trig : attention
+		});
 
 
-// 	});
+function setAttention(response){
+	//response是string
+	if(response==1){
+		error.style.display='none';
+		loginPop.hide();
+		follow();
+		//设置cookie
+		var date=new Date();
+		var expires=date.getDate()+1;
+		setCookie('loginSuc',true,expires);
+		//console.log('成功')
+	}else{
+		error.style.display='inline-block';
+	}	
+};
+
+function follow(){
+	//改变样式，设置关注
+	attention.style.display='none';
+	attentioned.style.display='inline-block';
+	//粉丝数+1；
+	fanNum.innerHTML=parseInt(fanNum.innerHTML)+1;
+	//用onclick事件覆盖之前的事件
+	attention.onclick=follow;
+};
+
+if(typeof getCookie()['loginSuc']!=='undefined'){//有cookie直接设置
+	//用onclick事件覆盖之前的事件
+	attention.onclick=follow;
+}else{//没cookie显示表单，进行验证
+	//客户端验证
+	//仅进行值是否为空的验证
+	var user=document.forms['login'].querySelector('.user');
+
+	var pass=document.forms['login'].querySelector('.pass');
+
+	var submit=document.forms['login'].querySelector('.submit');
+
+	var error=document.forms['login'].querySelector('.error');
+
+	var flag=true;
+	//值为空时，相应的边框设置为红色
+	addEvent(user,'blur',function(){
+		if(user.value==''){
+			user.style.border='1px solid red';
+			flag=false;
+		}
+	})
+	addEvent(user,'focus',function(){
+			user.style.border='1px solid #dfdfdf';
+			flag=true;
+	})
+
+	addEvent(pass,'blur',function(){
+		if(pass.value==''){
+			pass.style.border='1px solid red';
+			flag=false;
+		}
+	})
+	addEvent(pass,'focus',function(){
+			pass.style.border='1px solid #dfdfdf';
+			flag=true;
+	})
+
+	addEvent(submit,'click',function(){
+		//提交按钮设置为不可点击
+		if(!flag){//值为空时
+			error.style.display='inline-block';
+			console.log('错误1');
+		}else{//将数据发送服务器进行验证
+			get('http://study.163.com/webDev/login.htm',
+				{userName:md5(user.value),password:md5(pass.value)},
+				setAttention);
+		}
+	})
+};
+
+addEvent(attenCancel,'click',function(){
+	attentioned.style.display='none';
+	attention.style.display='inline-block';
+	//粉丝数-1；
+	fanNum.innerHTML=parseInt(fanNum.innerHTML)-1;
+});
 
 
-// })();
+//视频弹窗
+var corVideo=document.querySelector('.cor-video').getElementsByTagName('img')[0];
+var videoPop=new Pop({
+	type:'.video',
+	trig: corVideo
+});
 
+/***************弹窗部分*********************/
+
+
+
+
+
+/***************轮播器*********************/
 /*轮播器组件*/
 //图片地址传参作为下一步考虑
 (function(){
@@ -199,9 +274,67 @@
 
 })();
 
+//轮播器
+var mSlider = document.querySelector(".m-slider");
+
+var cursor = mSlider.querySelector('.slid-cursor');
+
+var cursors = toArray(cursor.children);
+
+var slider = new Slider({
+	//指定容器
+	container: mSlider,
+	
+});
+
+//自动轮播
+var autoChange=setInterval(function(){
+	slider.run()
+},5000);
+
+//鼠标悬停清除定时器
+addEvent(mSlider,'mouseover',function(){
+	clearInterval(autoChange);
+});
+
+//鼠标离开重置定时器
+addEvent(mSlider,'mouseout',function(){
+	autoChange=setInterval(function(){
+		slider.run();
+	}
+	,5000);
+});
+
+//点击直接跳转
+//target和E记得做兼容
+cursors.forEach(function(cursor, index){
+	addEvent(cursor,'click',function(e){
+		var e=e||window.event;
+		var target=e.target||e.srcElement;
+	  	if(target.className==='selected')return;
+	    slider.init(index);
+	})	
+});
+
+//完成额外逻辑,设置cursor的class
+slider.on('init',function(ev){
+	var pageIndex = ev.pageIndex;
+	cursors.forEach(function(cursor, index){
+		if(index === pageIndex ){
+			cursor.className = 'selected';
+		}else{
+			cursor.className = '';
+		}
+	})
+});
+/***************轮播器*********************/
 
 
-//获取课程和页码
+
+
+
+/********************课程及页码*********************************/
+/*获取课程和页码*/
 (function(){
 	var url='http://study.163.com/webDev/couresByCategory.htm';
 	var pageNo = 1,
@@ -261,12 +394,22 @@
 	function _getCoures(response){
 		var template = 
 			'<div class="cor-item">\
-				<img>\
-				<span class="cor-title"></span>\
-				<span class="cor-provider"></span>\
-				<span class="cor-num"><strong></strong></span>\
-				<span class="cor-price"></span>\
-			</div>'
+				<div class="cor-itemdtl">\
+					<img />\
+					<div class="itemdtl-r">\
+						<span class="cor-title"></span>\
+						<span class="cor-num"><strong>510</strong></span>\
+						<span class="cor-provider"></span>\
+						<span class="cor-cate"></span>\
+					</div>\
+					<div class="itemdtl-dsc"><p></p></div>\
+				</div>\
+					<img />\
+					<span class="cor-title"></span>\
+					<span class="cor-provider"></span>\
+					<span class="cor-num"><strong></strong></span>\
+					<span class="cor-price"></span>\
+				</div>'
 
 		var couresObj = JSON.parse(response).list;
 		var container = document.querySelector('.cor-lists');
@@ -278,20 +421,27 @@
 		for(var i=0,len=couresObj.length;i<len;i++){
 			//创建节点添加并获取节点
 			var item = layout.cloneNode(true);
-			container.appendChild(item);
-			var img = item.getElementsByTagName('img')[0];
-			var itemTitle = item.querySelector('.cor-title');
-			var itemPro = item.querySelector('.cor-provider');
-			var itemNum = item.querySelector('.cor-num').getElementsByTagName('strong')[0];
-			var itemPrice=item.querySelector('.cor-price');
+			var img = item.getElementsByTagName('img');
+			var itemTitle = item.querySelectorAll('.cor-title');
+			var itemPro = item.querySelectorAll('.cor-provider');
+			var itemNum = item.getElementsByTagName('strong');
+			var itemPrice = item.querySelector('.cor-price');
+			var itemDsc = item.querySelector('.itemdtl-dsc').getElementsByTagName('p')[0];
+			var itemCate = item.querySelector('.cor-cate');
 			//添加属性
-			img.setAttribute('src',couresObj[i].middlePhotoUrl);
-			itemTitle.innerText = couresObj[i].name;
-			itemPro.innerText = couresObj[i].provider;
-			itemNum.innerText = couresObj[i].learnerCount;
+			for(var k=0,klen=img.length;k<klen;k++){
+				img[k].setAttribute('src',couresObj[i].middlePhotoUrl);
+				itemTitle[k].innerText = couresObj[i].name;
+				itemPro[k].innerText = couresObj[i].provider;	
+				itemNum[k].innerText = couresObj[i].learnerCount;
+			}
+			itemCate.innerText = '分类：'+couresObj[i].categoryName;
 			itemPrice.innerText = '￥'+couresObj[i].price;
+			itemDsc.innerText = couresObj[i].description;
+			container.appendChild(item);
 		}
 		//添加hover事件
+		
 	}
 
 	//页码模块 参考前端某位学长
@@ -364,13 +514,13 @@
 	var aPage=document.querySelector('.cor-page');
 	//避免重复注册 创建在父节点上
 	aPage.onclick=function(e){
+
 		var e=e||window.event;
 		var target=e.target||e.srcElement;
 		//点击父元素不执行
 		if(target.tagName==='DIV')return;
 		if(target.className==='selected')return;
-		if(!target.index)nowNum=target.getAttribute('index');
-		
+		if(target.getAttribute('index'))nowNum=target.getAttribute('index');
 		Page({
 			container:container,
 			nowNum:nowNum,
@@ -382,9 +532,12 @@
 
 	getNum(1);
 })()
+/********************课程及页码*********************************/
 
 
-//右侧模块 需要优化及模块化
+
+/***************************右侧热门课程模块*******************/
+/*右侧热门课程列表*/
 var hotCoures = (function(){
 
 	var url='http://study.163.com/webDev/hotcouresByCategory.htm';
@@ -424,34 +577,28 @@ var hotCoures = (function(){
 
 })();
 
+/*右侧模块滚动显示*/
 var wrap=document.querySelector('.hot-wrap');
 
-function toRun(ele){
-	oTop=parseInt(window.getComputedStyle(ele,null)['top']);
-	if(parseInt(ele.style.top)<=-700){
-		for(var i=0;i<=20;i++){
-			(function(){
-				var oMove=35*i;
-				setTimeout(function(){
-					ele.style.top=oTop+oMove+'px';
-				},i*25)
-			})(i);
-		}
-	}else{
-		for(var i=0;i<=100;i++){
-			(function(){
-				var oMove=0.7*i;
-				setTimeout(function(){
-					ele.style.top=oTop-oMove+'px';
-				},i*5)
-			})(i);
-		}
-	}
-}
-
 setInterval(function(){
-	toRun(wrap);
+	if(parseInt(wrap.style.top)<=-70){
+		wrap.style.top=0;
+		var hotItem=wrap.children[0];
+		wrap.appendChild(hotItem);
+	}
+	
+	oTop=parseInt(getStyle(wrap,'top'));
+	for(var i=0;i<=100;i++){
+		(function(){
+			var oMove=0.7*i;
+			setTimeout(function(){
+				wrap.style.top=oTop-oMove+'px';
+			},i*5)
+		})(i);
+	}
+
 },5000);
+/***************************右侧热门课程模块*******************/
 
 
 
@@ -459,448 +606,19 @@ setInterval(function(){
 
 
 
-//登录模块  是否能设置成弹窗组件？？登录弹窗组件
-// (function(){
-// 	var attention=document.querySelector('.hd-attention');
-
-// 	var attentioned=document.querySelector('.hd-attentioned');
-
-// 	var fanNum=document.querySelector('.hd-fan').getElementsByTagName('strong')[0];
-
-// 	var attenCancel=document.querySelector('.hd-attention-cancel');
-
-// 	var login=document.querySelector('.m-login');
-
-// 	var loginForm=document.querySelector('.m-login-wrap');
-
-// 	var loginClose=loginForm.querySelector('.m-login-close');
-
-// 	var user=loginForm.querySelector('.user');
 
-// 	var pass=loginForm.querySelector('.pass');
 
-// 	var submit=loginForm.querySelector('.submit');
 
-// 	var flag=true;
 
-// 	var url='http://study.163.com/webDev/login.htm';
 
 
-// 	addEvent(attention,'click',function(){
-// 		//判断loginSuc是否设置，未设置则弹出登录框输账号密码
-// 		if(!getCookie()['loginSuc']){
-// 			//先弹出登录框
-// 			login.style.display='block';
-// 			//添加关闭事件
-// 			addEvent(loginClose,'click',function(){
-// 				login.style.display='none'; 
-// 			});
 
-// 			//表单验证
-// 			//客户端验证  仅进行是否值为空的验证
-// 			//值为空时，相应的边框设置为红色
-// 			addEvent(user,'blur',function(){
-// 				if(user.value==''){
-// 					user.style.border='1px solid red';
-// 					flag=false;
-// 				}
-// 			})
-// 			addEvent(user,'focus',function(){
-// 					user.style.border='1px solid #dfdfdf';
-// 			})
 
-// 			addEvent(pass,'blur',function(){
-// 				if(pass.value==''){
-// 					pass.style.border='1px solid red';
-// 					flag=false;
-// 				}
-// 			})
-// 			addEvent(pass,'focus',function(){
-// 					pass.style.border='1px solid #dfdfdf';
-// 			})
-// 		}else{//如果已经设置loginSuc,则显直接改变样式，设置为登录
-// 			//改变样式，设置关注
-// 			attention.style.display='none';
-// 			attentioned.style.display='inline-block';
-// 			//粉丝数+1；
-// 			fanNum.innerHTML=parseInt(fanNum.innerHTML)+1;
-// 		}
 
-// 	})
 
-// 	function setAttention(response){
-// 				//response是string
-// 				if(response==1){
-// 					//关闭登录框
-// 					login.style.display='none';
-// 					//改变样式，设置关注
-// 					attention.style.display='none';
-// 					attentioned.style.display='inline-block';
-// 					//粉丝数+1；
-// 					fanNum.innerHTML=parseInt(fanNum.innerHTML)+1;
-					
-// 					//设置cookie
-// 					var date=new Date();
-// 					var expires=date.getDate()+1;
-// 					setCookie('loginSuc',true,expires);
-					 
-// 					//console.log('成功')
-// 				}else{
-// 					//提示错误信息
-					
-// 				}	
-// 			}
 
-// 	//按按钮或按回车时进行提交
-// 	addEvent(submit,'click',function(){
-// 		if(flag){
-// 			get(url,
-// 			{userName:md5(user.value),password:md5(pass.value)},
-// 			setAttention);
-// 		}else{
-// 			//提示错误信息 直接提示用户名或密码错误
-// 		}
-		
-// 	})
-// 	//回车提交Enterkey
 
-// 	addEvent(attenCancel,'click',function(){
-// 		attentioned.style.display='none';
-// 		attention.style.display='inline-block';
 
-// 		fanNum.innerHTML=parseInt(fanNum.innerHTML)-1;
-// 	})
-// 	//console.log(e.keyDown)
 
-// })()
 
 
-
-//视频弹窗
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// fadeIn: function (ele){
-// 	    ele.style.opacity=0;
-// 	    //兼容IE
-// 	    ele.style.filter='alpha(opacity='+0+')';
-// 	    ele.style.display='block';
-// 	    for(var i=1;i<=10;i++){
-// 	    	(function(){
-// 		        var num=i*0.1;
-// 		        setTimeout(function(){
-// 		            ele.style.opacity=num;
-// 		            ele.style.filter='alpha(opacity='+i*10+')';
-// 		        },i*50);
-// 		    })(i);
-// 	    }
-// 	},
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*动态获取课程*/
-// var Coures = (function(){
-// 	var template = 
-// 		'<div class="cor-item">\
-// 			<img>\
-// 			<span class="cor-title"></span>\
-// 			<span class="cor-provider"></span>\
-// 			<span class="cor-num"><strong></strong></span>\
-// 			<span class="cor-price"></span>\
-// 		</div>'
-
-// 	// var url='http://study.163.com/webDev/couresByCategory.htm';
-// 	// var pageNo,type;
-// 	// var psize=window.screen.width>1205?20:15;	
-	
-// 	// ajax_get(url,{'pageNo':pageNo,'psize':psize,'type':type})
-
-// 	function getCoures(obj){
-// 		var couresObj = JSON.parse(obj).list;
-// 		var container = document.querySelector('.cor-lists');
-// 		var layout = html2node(template);
-// 		var totalCount = JSON.parse(obj).totalCount; //课程总数
-// 		//PSIZE?20:15在这里设置？？
-// 		container.innerHTML='';
-// 		//如何调用？？？
-// 		var pageNum=Math.ceil(totalCount/20);
-		
-
-// 		//还要给item添加移入移出显示详情方法
-
-// 		for(var i=0,len=couresObj.length;i<len;i++){
-// 			//创建节点添加并获取节点
-// 			var item = layout.cloneNode(true);
-
-// 			container.appendChild(item);
-// 			var img = item.getElementsByTagName('img')[0];
-// 			var itemTitle = item.querySelector('.cor-title');
-// 			var itemPro = item.querySelector('.cor-provider');
-// 			var itemNum = item.querySelector('.cor-num').getElementsByTagName('strong')[0];
-// 			var itemPrice=item.querySelector('.cor-price');
-// 			//添加属性
-// 			img.setAttribute('src',couresObj[i].bigPhotoUrl);
-// 			itemTitle.innerText = couresObj[i].name;
-// 			itemPro.innerText = couresObj[i].provider;
-// 			itemNum.innerText = couresObj[i].learnerCount;
-// 			itemPrice.innerText = '￥'+couresObj[i].price;
-// 		}
-
-// 		getPageNum(totalCount);
-// 	}
-
-
-// 	function getPageNum(total){
-// 		//初始化页码
-
-
-
-// 	}
-
-// 	return {
-// 		getCoures : getCoures,
-// 	}
-// })();
-
-// /*页码模块*/
-// (function(){
-// 	//怎么获取总页数？？
-// 	var Page = function(opt){
-
-// 		extend(Page.prototype,opt);
-
-// 		this.container = this.container;
-
-// 		this.length = this.length || 8;
-
-// 	    this.aPage = this._layout().cloneNode(true);
-
-// 		this.container.appendChild(this.aPage);
-
-// 		this.aPage = this.container.getElementsByTagName('a');
-
-// 		this.aPage=toArray(this.aPage);
-
-// 		this.len=this.aPage.length;
-
-// 		this.onNav=true;
-
-// 		if(this.onNav)this.nav();
-
-// 	};
-
-
-// 	extend(Page.prototype,emitter);
-
-// 	extend(Page.prototype,{
-// 		//创建节点并初始化
-// 		_layout : function(){
-// 			var len=this.length;
-// 			var container = document.createElement('div');
-// 			for(var i=0;i<len+2;i++){
-// 				var a=  document.createElement('a');
-// 				a.innerHTML=i;
-// 				container.appendChild(a);
-				
-// 			}
-// 			container.firstChild.className='prev';
-// 			container.lastChild.className='next';
-// 			container.children[1].className='selected';
-// 			return container;	
-// 		},
-
-// 		//初始化，用于Tab切换使用
-// 		init : function(){
-			
-// 		},
-
-// 		//点击页码直接定位
-// 		nav : function(){	
-// 			var _this=this;
-			
-// 			var aPage=_this.aPage;
-
-// 			var len=aPage.length;
-
-// 			var half=Math.floor(len/2)
-
-// 			aPage.forEach(function(page,index){
-// 				addEvent(page,'click',function(){
-// 					if((/[selected||prev||next]/).test(page.className))return;
-// 					for(var i=1;i<len-1;i++){
-// 						aPage[i].className='';
-// 					}
-					
-// 					//代码待优化 
-// 					if(this.innerHTML>half-1){
-// 						aPage[half].innerHTML=this.innerHTML;
-// 						aPage[half].className='selected';
-// 						_this.emit('nav',Number(this.innerHTML));
-// 						for(var k=1;k<half-1;k++){
-// 							aPage[half+k].innerHTML=Number(aPage[half].innerHTML)+k;
-// 						}
-// 						for(var j=1;j<half;j++){
-// 							aPage[half-j].innerHTML=Number(aPage[half].innerHTML)-j;
-// 						}
-// 					}else{
-// 						_this.emit('nav',Number(this.innerHTML));
-// 						aPage[Number(this.innerHTML)].className = 'selected';
-// 						for(var j=1;j<len-1;j++){
-// 							aPage[j].innerHTML=j;
-// 						}
-// 					}
-// 				})
-
-				
-// 			})
-// 		},
-
-// 		prev : function(){
-			
-// 		},
-
-// 		next : function(){
-			
-// 		}
-
-	
-
-// 	})
-
-// 	window.Page = Page;
-	
-// })()
-
-
-// _container.innerHTML='';
-// ajax_get('http://study.163.com/webDev/couresByCategory.htm',
-// {'pageNo':index,'psize':20,'type':10},Coures.getCoures);
-
-
-
-
-
-
-
-
-
-
-// var course_module = (function(){
-
-//     var url = "http://study.163.com/webDev/couresByCategory.htm";
-//     var pageSize = 20;
-//     var pageType = 10;
-
-//     var mnav = document.querySelector('.m-nav');
-//     var mnavTag = mnav.getElementsByTagName('a');
-//     var mpager = document.querySelector('.m-pager');
-
-//     delegateEvent(mnav,'a','click',
-//         function(target,event){
-//             if(pageType != target.getAttribute('data')){
-//                 for(i=0;i<mnavTag.length;i++){
-//                     removeClass(mnavTag[i],'selected');        
-//                 }
-//                 addClass(target,'selected');
-//                 pageType = target.getAttribute('data');
-//                 mpager.innerHTML = '';
-//                 getPageNum(1);
-//             }
-//             preventDefault(event);
-//         }
-//     );
-
-//     //获取分页器总页数以及课程列表第一页
-//     function getPageNum(now){    
-//         var options = {pageNo:now,psize:pageSize,type:pageType};
-//         get(url,options,function(response){
-//                 initPager(response,now);
-//             }
-//         );    
-//     }
-//     //初始化分页和课程列表
-//     function initPager(response,now){
-//         var res = JSON.parse(response);
-//         var option = {id:mpager,nowNum:now,allNum:res.totalPage,childLength:8,callback:getCourse};
-//         //初始化课程列表
-//         drawCourse(response);
-//         //初始化分页
-//         page(option);
-//     }
-//     //获取课程列表
-//     function getCourse(now,all){
-//         console.log('分页器：'+now);
-        
-//         var options = {pageNo:now,psize:pageSize,type:pageType};
-//         get(url,options,drawCourse);
-//     }
-//     //生成课程列表
-//     function drawCourse(response){
-//         var data = JSON.parse(response);
-//         console.log(data);
-//         console.log('获取的页码：'+data.pagination.pageIndex);
-        
-//         var boo = document.querySelectorAll('.u-cover');
-//         for(var i=boo.length-1;i>0;i--){
-//             boo[i].parentNode.removeChild(boo[i]);
-//         }
-        
-//         var templete = document.querySelector('.m-data-lists .f-templete');
-            
-//         for(var i=0,list=data.list;i<list.length;i++){       
-//             var cloned = templete.cloneNode(true);
-//             removeClass(cloned,'f-templete');
-//             var imgpic = cloned.querySelector('.imgpic');
-//             var title = cloned.querySelector('.tt');
-//             var orgname = cloned.querySelector('.orgname');
-//             var hot = cloned.querySelector('.hot');
-//             var pri = cloned.querySelector('.pri');
-//             var kindname = cloned.querySelector('.kindname');
-//             var disc = cloned.querySelector('.disc');
-            
-//             imgpic.src = list[i].middlePhotoUrl;
-//             imgpic.alt = list[i].name;
-//             title.innerText = list[i].name;
-//             orgname.innerText = list[i].provider;
-//             hot.innerText = list[i].learnerCount;
-//             pri.innerText = '￥' + list[i].price + '.00'; 
-//             kindname.innerText = list[i].categoryName;
-//             disc.innerText = list[i].description;      
-//             templete.parentNode.appendChild(cloned);
-//         }
-//     }
-
-//     getPageNum(1);    
-
-// })();
