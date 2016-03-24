@@ -17,10 +17,31 @@ label,summary{cursor:default;}
 a,button{cursor:pointer;}
 h1,h2,h3,h4,h5,h6,em,strong,b{font-weight:normal;}
 del,ins,u,s,a,a:hover{text-decoration:none;}
-body,textarea,input,button,select,keygen,legend{font:12px/1.14 arial,simsun;color:#333;outline:0;}
+body,textarea,input,button,select,keygen,legend{font:12px/1.14 arial,'Microsoft Yahei';color:#333;outline:0;}
 body{background:#fff;}
 a,a:hover{color:#333;}
 
+
+/*公用部分*/
+.fl{
+	float: left;
+}
+
+.fr{
+	float:right;
+} 
+
+.common-width{
+	width: 1205px;
+}
+
+
+
+
+
+
+
+/*遮罩与弹窗部分*/
 .mask{
 	position: fixed;
 	left: 0;
@@ -47,7 +68,6 @@ a,a:hover{color:#333;}
 .mask .close{
 	display: inline-block;
 	margin: 10px;
-	float: right;
 	width: 10px;
 	height: 10px;
 	background: url('../img/close.png') no-repeat left top;
@@ -121,14 +141,12 @@ a,a:hover{color:#333;}
 }
 
 .tp-wrap{
-	width: 1205px;
 	height: 100%;
 	margin: 0 auto;
 }
 
 .tp-info{
 	display: inline-block;
-	float: left;
 }
 
 .tp-info a{
@@ -141,7 +159,6 @@ a,a:hover{color:#333;}
 
 .tp-close{
 	display: inline-block;
-	float: right;
 	padding-left: 15px; 
 	background: url('../img/x.png') no-repeat left 50%;
 	cursor: pointer;
@@ -150,7 +167,6 @@ a,a:hover{color:#333;}
 
 /*头部导航*/
 .m-hd{
-	width: 1205px;
 	height: 90px;
 	margin: 0 auto;
 }
@@ -250,13 +266,6 @@ a,a:hover{color:#333;}
 	background:url('../img/search1.png') no-repeat 0 1px;
 }
 
-.fl{
-	float: left;
-}
-
-.fr{
-	float:right;
-} 
 
 /*轮播器CSS*/
 .m-slider{
@@ -305,7 +314,6 @@ a,a:hover{color:#333;}
 
 /*工作环境*/
 .m-product{
-	width: 1205px;
 	height: 296px;
 	margin: 0 auto;
 	color: #666;
@@ -315,7 +323,6 @@ a,a:hover{color:#333;}
 	display: inline-block;
 	width:400px;
 	height: 296px;
-	float:left;
 	background:no-repeat 5px 68px;
 } 
 
@@ -375,8 +382,7 @@ a,a:hover{color:#333;}
 
 .m-cor .cor-fl{
 	width: 985px;
-	height: 100%;
-	float:left;
+	height: auto;
 }
 
 .m-cor .cor-fl .tab{
@@ -501,7 +507,6 @@ a,a:hover{color:#333;}
 
 .m-cor .cor-fl .cor-itemdtl img{
 	margin: 11px 0 20px 11px;
-	float: left;
 }
 
 .m-cor .cor-fl .cor-itemdtl .itemdtl-r{
@@ -548,7 +553,7 @@ a,a:hover{color:#333;}
 
 
 .m-cor .cor-fl .cor-page{
-	float:right;
+
 }
 
 .m-cor .cor-fl .cor-page a{
@@ -591,7 +596,6 @@ a,a:hover{color:#333;}
 .m-cor .cor-fr{
 	width: 223px;
 	height: 100%;
-	float:right;
 }
 
 .m-cor .cor-fr .cor-video{
@@ -654,7 +658,6 @@ a,a:hover{color:#333;}
 	display: inline-block;
 	width: 50px;
 	height: 50px;
-	float: left;
 	margin-right: 10px;
 }
 
@@ -684,7 +687,6 @@ a,a:hover{color:#333;}
 }
 
 .m-foot .ft-wrap{
-	width: 1205px;
 	height: 100%;
 	margin: 0 auto;
 }
@@ -727,5 +729,25 @@ a,a:hover{color:#333;}
 
 
 /*响应式*/
+@media screen and (max-width:1205px){
+	.common-width{
+		width: 960px;
+	}
 
+	.m-product .pd-item{
+		width: 320px;
+	}
+
+	.m-product .pd-item .text{
+		width: 180px;
+	}
+
+	.m-cor{
+		width: 960px;
+	}
+
+	.m-cor .cor-fl{
+		width: 730px;
+	}
+}
 

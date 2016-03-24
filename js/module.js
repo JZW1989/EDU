@@ -223,9 +223,10 @@ var videoPop=new Pop({
 
 	//淡入效果
 	_fadeIn: function (ele){
-	    ele.style.opacity=0;
-	    //兼容IE
-	    ele.style.filter='alpha(opacity='+0+')';
+		//透明度设为0
+		ele.style.opacity=0;
+   		//兼容IE
+    	ele.style.filter='alpha(opacity='+ 0 +')';
 	    ele.style.display='block';
 	    for(var i=1;i<=20;i++){
 	    	(function(){
@@ -258,7 +259,7 @@ var videoPop=new Pop({
 			//透明度设为0
 			this.imgs[i].style.opacity=0;
 	   		//兼容IE
-	    	this.imgs[i].style.filter='alpha(opacity='+0+')';
+	    	this.imgs[i].style.filter='alpha(opacity='+ 0 +')';
 		}
 		//将对应的图片设置成显示
 		this._fadeIn(this.imgs[this.pageIndex]);
@@ -335,11 +336,11 @@ slider.on('init',function(ev){
 
 /********************课程及页码*********************************/
 /*获取课程和页码*/
-(function(){
+var Coures=(function(){
 	var url='http://study.163.com/webDev/couresByCategory.htm';
 	var pageNo = 1,
 		type = 10,
-		psize = window.screen.width>1205?20:15;
+		psize = document.body.clientWidth>1205?20:15;
 	var pageContainer=document.querySelector('.cor-page');	
 
 	var tab=document.querySelector('.tab');
@@ -351,10 +352,9 @@ slider.on('init',function(ev){
 			var target=e.target||e.srcElement;
 			//切换type 作为属性写在html中
 			type=parseInt(target.getAttribute('ctype'));
-			var options = {'pageNo':1,'type':type,'psize':psize};
+			//var options = {'pageNo':1,'type':type,'psize':psize};
 			
-			getNum(1);
-
+			getNum(1,psize);
 			//tab样式切换
 			for(var i=0,len=tabs.length;i<len;i++){
 				tabs[i].className='bt';
@@ -365,8 +365,20 @@ slider.on('init',function(ev){
 	})
 
 
-	//获取页码总数和页码第一页，用于页面载入和tab切换
-	function getNum(now){	
+	//响应式
+	addEvent(window,'resize',function(){
+		psize=document.body.clientWidth>1205?20:15;
+		getNum(1,psize);
+	});
+
+
+	/**
+	 * [getNum description]
+	 * @param  {[type]} now   [当前页码]
+	 * @param  {[type]} psize [每页课程数目]
+	 * @return {[type]}       [description]
+	 */
+	function getNum(now,psize){	
 		var options={'pageNo':now,'type':type,'psize':psize};
 		get(url,options,function(response){
 			init(response,now);
@@ -378,7 +390,7 @@ slider.on('init',function(ev){
 		var options={
 			container:pageContainer,
 			nowNum:now,
-			allNum:Math.ceil(obj.totalCount/20),
+			allNum:Math.ceil(obj.totalCount/psize),
 			callback:getCoures,
 		}
 		Page(options);
@@ -395,7 +407,7 @@ slider.on('init',function(ev){
 		var template = 
 			'<div class="cor-item">\
 				<div class="cor-itemdtl">\
-					<img />\
+					<img class="fl" />\
 					<div class="itemdtl-r">\
 						<span class="cor-title"></span>\
 						<span class="cor-num"><strong>510</strong></span>\
@@ -514,13 +526,13 @@ slider.on('init',function(ev){
 	var aPage=document.querySelector('.cor-page');
 	//避免重复注册 创建在父节点上
 	aPage.onclick=function(e){
-
 		var e=e||window.event;
 		var target=e.target||e.srcElement;
 		//点击父元素不执行
 		if(target.tagName==='DIV')return;
 		if(target.className==='selected')return;
-		if(target.getAttribute('index'))nowNum=target.getAttribute('index');
+		if(!target.index)nowNum=target.getAttribute('index');
+		
 		Page({
 			container:container,
 			nowNum:nowNum,
@@ -530,8 +542,13 @@ slider.on('init',function(ev){
 	}
 };
 
-	getNum(1);
-})()
+	//初始化
+	getNum(1,psize);
+
+})();
+
+
+
 /********************课程及页码*********************************/
 
 
@@ -546,7 +563,7 @@ var hotCoures = (function(){
 	function _getHotCoures(response){
 		var template = 
 			'<div class="hotcor">\
-				<div class="hotcor-img"></div>\
+				<div class="hotcor-img fl"></div>\
 				<span class="hotcor-title"></span>\
 				<span class="hotcor-num"></span>\
 			</div>'
@@ -587,7 +604,7 @@ setInterval(function(){
 		wrap.appendChild(hotItem);
 	}
 	
-	oTop=parseInt(getStyle(wrap,'top'));
+	oTop=parseInt(window.getComputedStyle(wrap,null)['top']);
 	for(var i=0;i<=100;i++){
 		(function(){
 			var oMove=0.7*i;
