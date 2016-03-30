@@ -53,8 +53,20 @@ function get(url,options,callback){
     }
   }
 
-  XHR.open('GET',url,true);
-  XHR.send(null);
+  try{
+    XHR.open('GET',url,true);
+    XHR.send(null);
+  }catch(e){//IE 8跨域访问
+    var XDR=new XDomainRequest();
+    XDR.open('GET',url,true);
+    XDR.send(null);
+    XDR.onload=function(){
+      alert(XDR.responseText);
+      callback(XDR.responseText);
+    }
+  }
+  
+ 
 }
 
 
